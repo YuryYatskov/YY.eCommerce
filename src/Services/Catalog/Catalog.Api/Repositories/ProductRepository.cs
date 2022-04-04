@@ -13,17 +13,17 @@ namespace Catalog.Api.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProductsAsync()
         {
             return await _context.Products.Find(x => true).ToListAsync();
         }
 
-        public async Task<Product> GetProduct(string id)
+        public async Task<Product> GetProductAsync(string id)
         {
             return await _context.Products.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
+        public async Task<IEnumerable<Product>> GetProductByCategoryAsync(string categoryName)
         {
             FilterDefinition<Product> filter = Builders<Product>.Filter.ElemMatch(p => p.Category, categoryName);
             return await _context.Products.Find(filter).ToListAsync();
@@ -35,7 +35,7 @@ namespace Catalog.Api.Repositories
             return await _context.Products.Find(filter).ToListAsync();
         }
 
-        public async Task CreateProduct(Product product)
+        public async Task CreateProductAsync(Product product)
         {
             await _context.Products.InsertOneAsync(product);
         }
