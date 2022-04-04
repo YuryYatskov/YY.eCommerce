@@ -1,3 +1,5 @@
+using Catalog.Api.Data;
+using Catalog.Api.Repositories;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -23,6 +25,9 @@ builder.Services.AddSwaggerGen(c => {
     c.IncludeXmlComments(xmlPathApp);
 
 });
+
+builder.Services.AddScoped<ICatalogContext, CatalogContext>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 

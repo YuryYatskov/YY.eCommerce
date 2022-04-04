@@ -40,13 +40,13 @@ namespace Catalog.Api.Repositories
             await _context.Products.InsertOneAsync(product);
         }
 
-        public async Task<bool> UpdateProduct(Product product)
+        public async Task<bool> UpdateProductAsync(Product product)
         {
             var updateResult = await _context.Products.ReplaceOneAsync(x => x.Id == product.Id, product);
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
         }
 
-        public async Task<bool> DeleteProduct(string id)
+        public async Task<bool> DeleteProductAsync(string id)
         {
             FilterDefinition<Product> filter = Builders<Product>.Filter.ElemMatch(p => p.Id, id);
             DeleteResult deleteResult = await _context.Products.DeleteOneAsync(filter);

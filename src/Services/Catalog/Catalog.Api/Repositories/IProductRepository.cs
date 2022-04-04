@@ -14,8 +14,8 @@ namespace Catalog.Api.Repositories
 
         Task CreateProductAsync(Product product);
 
-        Task<bool> UpdateProduct(Product product);
+        Task<bool> UpdateProductAsync(Product product);
 
-        Task<bool> DeleteProduct(string id);
+        Task<bool> DeleteProductAsync(string id);
     }
 }
