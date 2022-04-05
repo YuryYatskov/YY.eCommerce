@@ -40,7 +40,7 @@ namespace Catalog.Api.Controllers
             _logger.LogInformation("Get all products.");
             var products = await _repository.GetProductsAsync();
             return Ok(products);
-        }
+        } 
 
         /// <summary>
         /// Get a product.
