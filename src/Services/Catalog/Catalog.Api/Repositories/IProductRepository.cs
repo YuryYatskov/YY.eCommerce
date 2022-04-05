@@ -8,7 +8,7 @@ namespace Catalog.Api.Repositories
 
         Task<Product> GetProductAsync(string id);
 
-        Task<IEnumerable<Product>> GetProductByName(string name);
+        Task<IEnumerable<Product>> GetProductByNameAsync(string name);
 
         Task<IEnumerable<Product>> GetProductByCategoryAsync(string categoryName);
 

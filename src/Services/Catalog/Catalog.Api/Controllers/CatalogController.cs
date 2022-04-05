@@ -1,5 +1,6 @@
 ﻿using Catalog.Api.Entities;
 using Catalog.Api.Repositories;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
@@ -53,17 +54,34 @@ namespace Catalog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Product>> GetProductById([FromRoute, Required(AllowEmptyStrings = false)] string id)
         {
-            _logger.LogInformation("Get a product by ID {id}.", id);
+            _logger.LogInformation("Get a product by identifier '{id}'.", id);
             var product = await _repository.GetProductAsync(id);
 
             if (product == null)
             {
-                var message = $"Product with id: {id}, not found.";
+                const string message = "Product with identifier '{id}' is not found.";
                 _logger.LogWarning(message, id);
-                return NotFound(message);
+                return NotFound(new StatusCodeProblemDetails(StatusCodes.Status404NotFound) { Detail = message.Replace("{id}", id) } );
             }
 
             return Ok(product);
+        }
+
+        /// <summary>
+        /// Get products by name.
+        /// </summary>
+        /// <param name="name"> A name. </param>
+        /// <response code="200"> Products. </response>
+        [HttpGet("[action]/{name}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<Product>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductByName([FromRoute, Required(AllowEmptyStrings = false)] string name)
+        {
+            _logger.LogInformation("Get products by category {category}.", name);
+            var products = await _repository.GetProductByNameAsync(name);
+            return Ok(products);
         }
 
         /// <summary>
@@ -108,7 +126,7 @@ namespace Catalog.Api.Controllers
         /// <response code="204"> A product has been changed. </response>
         /// <response code="400"> An error occurred while changing the value during model validation. Bad request. </response>
         /// <response code="404"> A value with the specified identifier was not found. </response>
-        [HttpPost]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(Product), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
