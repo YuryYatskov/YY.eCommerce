@@ -11,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c => {
@@ -26,7 +25,6 @@ builder.Services.AddSwaggerGen(c => {
 
     var xmlPathApp = Path.Combine(AppContext.BaseDirectory, xmlFile.Replace("API", "App"));
     c.IncludeXmlComments(xmlPathApp);
-
 });
 
 builder.Services.AddProblemDetails(options => {
@@ -76,8 +74,6 @@ builder.Services.AddScoped<ICatalogContext, CatalogContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
-
-//var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

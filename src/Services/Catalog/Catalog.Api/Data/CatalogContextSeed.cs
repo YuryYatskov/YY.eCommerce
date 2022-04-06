@@ -3,17 +3,28 @@ using MongoDB.Driver;
 
 namespace Catalog.Api.Data
 {
-    public class CatalogContextSeed
+    /// <summary>
+    /// Catalog context seed.
+    /// </summary>
+    public static class CatalogContextSeed
     {
+        /// <summary>
+        /// Seed data.
+        /// </summary>
+        /// <param name="productCollection"> Represents a collection of products in a database. </param>
         public static void SeedData(IMongoCollection<Product> productCollection)
-        { 
-            var existProduct = productCollection.Find(p => true).Any();
+        {
+            var existProduct = productCollection.Find(_ => true).Any();
             if (!existProduct)
             {
                 productCollection.InsertManyAsync(GePreconfiguredProducts());
             }
         }
 
+        /// <summary>
+        /// Get pre-configured products.
+        /// </summary>
+        /// <returns> A product collection.  </returns>
         private static IEnumerable<Product> GePreconfiguredProducts()
         {
             return new List<Product>()
