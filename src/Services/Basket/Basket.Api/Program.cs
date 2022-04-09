@@ -1,5 +1,6 @@
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.OpenApi.Models;
 using System.Net;
 using System.Reflection;
@@ -7,22 +8,25 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddStackExchangeRedisCache(options =>
+    options.Configuration = builder.Configuration.GetSection(nameof(RedisCacheOptions))
+    .Get<RedisCacheOptions>().Configuration);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "YY.Basket.API", Version = "v1" });
-    c.EnableAnnotations();
-    c.UseInlineDefinitionsForEnums();
+builder.Services.AddSwaggerGen(options => {
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "YY.Basket.API", Version = "v1" });
+    options.EnableAnnotations();
+    options.UseInlineDefinitionsForEnums();
 
     // Set the comments path for the Swagger JSON and UI.
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+    options.IncludeXmlComments(xmlPath);
 
     var xmlPathApp = Path.Combine(AppContext.BaseDirectory, xmlFile.Replace("API", "App"));
-    c.IncludeXmlComments(xmlPathApp);
+    options.IncludeXmlComments(xmlPathApp);
 });
 
 builder.Services.AddProblemDetails(options => {
