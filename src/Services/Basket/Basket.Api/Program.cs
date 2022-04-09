@@ -1,3 +1,4 @@
+using Basket.Api.Repositories;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
@@ -71,6 +72,8 @@ builder.Services.AddProblemDetails(options => {
     options.Map<NotImplementedException>(exception => Map(exception, HttpStatusCode.NotImplemented));
     options.Map<Exception>(exception => Map(exception, HttpStatusCode.InternalServerError));
 });
+
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 var app = builder.Build();
 

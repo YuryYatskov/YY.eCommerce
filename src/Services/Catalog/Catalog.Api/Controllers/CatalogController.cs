@@ -146,7 +146,7 @@ namespace Catalog.Api.Controllers
         /// <response code="404"> A value with the specified identifier was not found. </response>
         [HttpDelete("{id:length(24)}")]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(Product), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete([FromRoute, Required(AllowEmptyStrings = false)] string id)
         {

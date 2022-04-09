@@ -2,12 +2,27 @@
 
 namespace Basket.Api.Repositories
 {
+    /// <summary>
+    /// A basket repository.
+    /// </summary>
     public interface IBasketRepository
     {
-        Task<ShoppingCart?> GetBasketAsync(string userName);
+        /// <summary>
+        /// Get a basket.
+        /// </summary>
+        /// <param name="userName"> A user name. </param>
+        Task<ShoppingCart> GetBasketAsync(string userName);
 
-        Task<ShoppingCart?> UpdateBasketAsync(ShoppingCart basket);
+        /// <summary>
+        /// Add or update a basket.
+        /// </summary>
+        /// <param name="basket"> A basket. </param>
+        Task<ShoppingCart> UpdateBasketAsync(ShoppingCart basket);
 
+        /// <summary>
+        /// Delete a basket.
+        /// </summary>
+        /// <param name="userName"> A user name. </param>
         Task DeleteBasketAsync(string userName);
     }
 }
