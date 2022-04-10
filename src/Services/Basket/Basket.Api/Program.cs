@@ -9,9 +9,6 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddStackExchangeRedisCache(options =>
-    options.Configuration = builder.Configuration.GetSection(nameof(RedisCacheOptions))
-    .Get<RedisCacheOptions>().Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -73,6 +70,10 @@ builder.Services.AddProblemDetails(options => {
     options.Map<Exception>(exception => Map(exception, HttpStatusCode.InternalServerError));
 });
 
+builder.Services.AddStackExchangeRedisCache(options =>
+    options.Configuration = builder.Configuration.GetSection(nameof(RedisCacheOptions))
+    .Get<RedisCacheOptions>().Configuration);
+
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 var app = builder.Build();
@@ -81,7 +82,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "YY.UCProtocol.API v1"));
 }
+app.UseProblemDetails();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
