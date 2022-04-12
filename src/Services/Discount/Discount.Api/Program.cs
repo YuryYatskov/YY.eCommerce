@@ -1,10 +1,8 @@
-using Catalog.Api.Data;
-using Catalog.Api.Repositories;
 using Common.BuildApplication;
 using Hellang.Middleware.ProblemDetails;
 using Serilog;
 
-const string _nameService = "YY.Catalog.API";
+const string _nameService = "YY.Discount.API";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwagger(_nameService);
 builder.Services.AddExceptionHandlerProblemDetail();
-
-builder.Services.AddScoped<ICatalogContext, CatalogContext>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 
