@@ -84,7 +84,7 @@ namespace Discount.Api.Controllers
             var result = await _discountRepository.UpdateDiscountAsync(coupon);
             if(result)
                 return NoContent();
-            
+
             return BadRequest();
         }
 
