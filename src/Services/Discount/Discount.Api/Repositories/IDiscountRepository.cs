@@ -15,6 +15,13 @@ namespace Discount.Api.Repositories
         Task<Coupon> GetDiscountAsync(string productName);
 
         /// <summary>
+        /// Get a product discount by identifier.
+        /// </summary>
+        /// <param name="id"> A product identifier. </param>
+        /// <returns> A product discount. </returns>
+        Task<Coupon?> GetDiscountAsync(int id);
+
+        /// <summary>
         /// Create product discount.
         /// </summary>
         /// <param name="coupon"> A discount coupon. </param>

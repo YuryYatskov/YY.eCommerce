@@ -9,6 +9,10 @@ namespace Discount.Api.Repositories
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Initialization.
+        /// </summary>
+        /// <param name="configuration"> A database connection configuration. </param>
         public DiscountRepository(IConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -17,12 +21,12 @@ namespace Discount.Api.Repositories
         /// <summary>
         /// A connecting string.
         /// </summary>
-        private string ConnectingString => _configuration.GetValue<string>("DatabaseSettings:ConnectionString");
+        private string ConnectingString() => _configuration.GetValue<string>("DatabaseSettings:ConnectingString");
 
         /// <inheritdoc/>
         public async Task<Coupon> GetDiscountAsync(string productName)
         {
-            using var connection = new NpgsqlConnection(ConnectingString);
+            using var connection = new NpgsqlConnection(ConnectingString());
 
             var coupon = await connection.QueryFirstOrDefaultAsync<Coupon>(
                 "select * from Coupon where ProductName = @ProductName", new { ProductName = productName });
@@ -34,9 +38,20 @@ namespace Discount.Api.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task<Coupon?> GetDiscountAsync(int id)
+        {
+            using var connection = new NpgsqlConnection(ConnectingString());
+
+            var coupon = await connection.QueryFirstOrDefaultAsync<Coupon>(
+                "select * from Coupon where Id = @Id", new { Id = id });
+
+            return coupon;
+        }
+
+        /// <inheritdoc/>
         public async Task<bool> CreateDiscountAsync(Coupon coupon)
         {
-            using var connection = new NpgsqlConnection(ConnectingString);
+            using var connection = new NpgsqlConnection(ConnectingString());
 
             var affected = await connection.ExecuteAsync(
                 @"insert into Coupon (ProductName, Description, Amount)
@@ -44,7 +59,8 @@ namespace Discount.Api.Repositories
                 new {
                     coupon.ProductName,
                     coupon.Description,
-                    coupon.Amount });
+                    coupon.Amount
+                });
 
             return affected != 0;
         }
@@ -52,13 +68,13 @@ namespace Discount.Api.Repositories
         /// <inheritdoc/>
         public async Task<bool> UpdateDiscountAsync(Coupon coupon)
         {
-            using var connection = new NpgsqlConnection(ConnectingString);
+            using var connection = new NpgsqlConnection(ConnectingString());
 
             var affected = await connection.ExecuteAsync(
                 @"update Coupon
                     set ProductName = @ProductName,
                         Description = @Description,
-                        Amount = @Amount)
+                        Amount = @Amount
                     where Id = @Id",
                 new {
                     coupon.ProductName,
@@ -73,7 +89,7 @@ namespace Discount.Api.Repositories
         /// <inheritdoc/>
         public async Task<bool> DeleteDiscountAsync(string productName)
         {
-            using var connection = new NpgsqlConnection(ConnectingString);
+            using var connection = new NpgsqlConnection(ConnectingString());
 
             var affected = await connection.ExecuteAsync(
                 "delete from Coupon where ProductName = @ProductName",

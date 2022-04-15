@@ -8,8 +8,16 @@ using System.Net;
 
 namespace Common.BuildApplication
 {
+    /// <summary>
+    /// The problem detail builder service.
+    /// </summary>
     public static class ProblemDetailBuilder
     {
+        /// <summary>
+        /// Add an exception handler and return problem details.
+        /// </summary>
+        /// <param name="services"> A service collection. </param>
+        /// <returns> A service collection. </returns>
         public static IServiceCollection AddExceptionHandlerProblemDetail(this IServiceCollection services)
         {
             services.AddProblemDetails(options => {

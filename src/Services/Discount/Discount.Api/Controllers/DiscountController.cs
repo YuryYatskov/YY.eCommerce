@@ -1,5 +1,6 @@
 ﻿using Discount.Api.Entities;
 using Discount.Api.Repositories;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
@@ -20,6 +21,7 @@ namespace Discount.Api.Controllers
         /// Initialization.
         /// </summary>
         /// <param name="discountRepository"> A discount repository. </param>
+        /// <param name="logger"> Logging service. </param>
         public DiscountController(IDiscountRepository discountRepository, ILogger<DiscountController> logger)
         {
             _discountRepository = discountRepository ?? throw new ArgumentNullException(nameof(discountRepository));
@@ -55,10 +57,20 @@ namespace Discount.Api.Controllers
         public async Task<ActionResult<Coupon>> CreateProduct([FromBody, Required] Coupon coupon)
         {
             _logger.LogInformation("Create a discount for the product '{productName}'.", coupon.ProductName);
-            await _discountRepository.CreateDiscountAsync(coupon);
-            return CreatedAtAction(nameof(GetDiscount),
-                new { productName = coupon.ProductName },
-                new { coupon.ProductName, coupon.Amount });
+
+            var couponExist = await _discountRepository.GetDiscountAsync(coupon.ProductName);
+            if (couponExist.Id != 0)
+                return BadRequest($"The discount for the product '{coupon.ProductName}' is already set.");
+
+            var result = await _discountRepository.CreateDiscountAsync(coupon);
+            if (result)
+            {
+                var couponAdded = await _discountRepository.GetDiscountAsync(coupon.ProductName);
+                return CreatedAtAction(nameof(GetDiscount),
+                    new { productName = coupon.ProductName },
+                    couponAdded);
+            }
+            return BadRequest();
         }
 
         /// <summary>
@@ -77,15 +89,30 @@ namespace Discount.Api.Controllers
         {
             _logger.LogInformation("Change product discount by id {id}.", coupon.Id);
 
-            var couponExist = await _discountRepository.GetDiscountAsync(coupon.ProductName);
+            var couponExist = await _discountRepository.GetDiscountAsync(coupon.Id);
             if (couponExist is null)
-                return NotFound($"The product discount by id '{coupon.Id}' is not found.");
+            {
+                const string message = "The product discount by id '{coupon.Id}' is not found.";
+                _logger.LogWarning(message, coupon.Id);
+
+                return NotFound(new StatusCodeProblemDetails(StatusCodes.Status404NotFound)
+                { Detail = message.Replace("{coupon.Id}", coupon.Id.ToString()) });
+            }
 
             var result = await _discountRepository.UpdateDiscountAsync(coupon);
-            if(result)
+            if (result)
+            {
+                _logger.LogInformation("The discount for the product '{coupon.ProductName}' with identifier '{coupon.Id}' has been changed.", coupon.ProductName, coupon.Id);
                 return NoContent();
+            }
 
-            return BadRequest();
+            const string messageNotChange = "It is impossible to change the discount for the '{coupon.ProductName}' product with identifier '{coupon.Id}'.";
+            _logger.LogInformation(messageNotChange, coupon.ProductName, coupon.Id);
+
+            return BadRequest(new StatusCodeProblemDetails(StatusCodes.Status400BadRequest)
+                    { Detail = messageNotChange
+                                .Replace("{coupon.ProductName}", coupon.ProductName)
+                                .Replace("{coupon.Id}", coupon.Id.ToString()) });
         }
 
         /// <summary>

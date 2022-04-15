@@ -1,4 +1,5 @@
 using Common.BuildApplication;
+using Discount.Api.Repositories;
 using Hellang.Middleware.ProblemDetails;
 using Serilog;
 
@@ -15,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwagger(_nameService);
 builder.Services.AddExceptionHandlerProblemDetail();
+
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 var app = builder.Build();
 
