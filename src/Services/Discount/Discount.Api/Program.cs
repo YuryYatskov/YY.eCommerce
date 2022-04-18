@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
 
+builder.Host.MigrateDatabase<Program>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
