@@ -1,4 +1,5 @@
 using Common.BuildApplication;
+using Discount.Api.Extensions;
 using Discount.Api.Repositories;
 using Hellang.Middleware.ProblemDetails;
 using Serilog;
@@ -8,8 +9,6 @@ const string _nameService = "YY.Discount.API";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
-
-builder.Host.MigrateDatabase<Program>();
 
 // Add services to the container.
 
@@ -34,5 +33,7 @@ app.UseProblemDetails();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MigrateDatabase<Program>();
 
 app.Run();
