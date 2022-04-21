@@ -6,17 +6,17 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Services/Basket/Basket.Api/Basket.Api.csproj", "Services/Basket/Basket.Api/"]
+COPY ["Services/Discount/Discount.Api/Discount.Api.csproj", "Services/Discount/Discount.Api/"]
 COPY ["BuildingBlocks/Common.BuildApplication/Common.BuildApplication.csproj", "BuildingBlocks/Common.BuildApplication/"]
-RUN dotnet restore "Services/Basket/Basket.Api/Basket.Api.csproj"
+RUN dotnet restore "Services/Discount/Discount.Api/Discount.Api.csproj"
 COPY . .
-WORKDIR "/src/Services/Basket/Basket.Api"
-RUN dotnet build "Basket.Api.csproj" -c Release -o /app/build
+WORKDIR "/src/Services/Discount/Discount.Api"
+RUN dotnet build "Discount.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Basket.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "Discount.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Basket.Api.dll"]
+ENTRYPOINT ["dotnet", "Discount.Api.dll"]
