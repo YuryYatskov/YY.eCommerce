@@ -2,8 +2,18 @@
 
 namespace Discount.Api.Extensions
 {
+	/// <summary>
+	/// The host extension.
+	/// </summary>
 	public static class HostExtension
 	{
+		/// <summary>
+		/// The migrate database and seed.
+		/// </summary>
+		/// <typeparam name="TContext"> A call context. </typeparam>
+		/// <param name="host"> A host application. </param>
+		/// <param name="retry"> The number of attempts to connect to the database. </param>
+		/// <returns> A host application. </returns>
 		public static IHost MigrateDatabase<TContext>(this IHost host, int retry = 0)
 		{
 			int retryForAvailability = retry;
