@@ -1,10 +1,10 @@
-using Catalog.Api.Data;
-using Catalog.Api.Repositories;
 using Common.BuildApplication;
+using Discount.Api.Extensions;
+using Discount.Api.Repositories;
 using Hellang.Middleware.ProblemDetails;
 using Serilog;
 
-const string _nameService = "YY.Catalog.API";
+const string _nameService = "YY.Discount.API";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger(_nameService);
 builder.Services.AddExceptionHandlerProblemDetail();
 
-builder.Services.AddScoped<ICatalogContext, CatalogContext>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 var app = builder.Build();
 
@@ -34,5 +33,7 @@ app.UseProblemDetails();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MigrateDatabase<Program>();
 
 app.Run();

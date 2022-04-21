@@ -40,7 +40,7 @@ namespace Catalog.Api.Controllers
             _logger.LogInformation("Get all products.");
             var products = await _repository.GetProductsAsync();
             return Ok(products);
-        } 
+        }
 
         /// <summary>
         /// Get a product.
@@ -148,7 +148,7 @@ namespace Catalog.Api.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Delete([FromRoute, Required(AllowEmptyStrings = false)] string id)
+        public async Task<ActionResult> DeleteProduct([FromRoute, Required(AllowEmptyStrings = false)] string id)
         {
             _logger.LogInformation("Delete a product by id {id}.", id);
             await _repository.DeleteProductAsync(id);
