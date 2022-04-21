@@ -4,12 +4,21 @@ using System.Reflection;
 
 namespace Common.BuildApplication
 {
+    /// <summary>
+    /// The swagger builder service.
+    /// </summary>
     public static class SwaggerBuilder
     {
+        /// <summary>
+        /// Add swagger service and its settings.
+        /// </summary>
+        /// <param name="services"> A service collection. </param>
+        /// <param name="titleOpenApi"> The title of the application. </param>
+        /// <returns> A service collection. </returns>
         public static IServiceCollection AddSwagger(this IServiceCollection services, string titleOpenApi)
         {
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title =titleOpenApi, Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = titleOpenApi, Version = "v1" });
                 c.EnableAnnotations();
                 c.UseInlineDefinitionsForEnums();
 
