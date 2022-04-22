@@ -60,7 +60,7 @@ namespace Discount.Api.Controllers
 
             var couponExist = await _discountRepository.GetDiscountAsync(coupon.ProductName);
             if (couponExist.Id != 0)
-                return BadRequest($"The discount for the product '{coupon.ProductName}' is already set.");
+                return BadRequest($"The discount for the product '{coupon.ProductName}' is already exists.");
 
             var result = await _discountRepository.CreateDiscountAsync(coupon);
             if (result)
