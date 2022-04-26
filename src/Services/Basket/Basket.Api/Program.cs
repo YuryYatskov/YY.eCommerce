@@ -1,5 +1,7 @@
 using Basket.Api.Repositories;
+using Basket.Api.Services;
 using Common.BuildApplication;
+using Discount.Grpc.Protos;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Serilog;
@@ -24,6 +26,10 @@ builder.Services.AddStackExchangeRedisCache(options =>
     .Get<RedisCacheOptions>().Configuration);
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]));
+builder.Services.AddScoped<DiscountGrpcService>();
 
 var app = builder.Build();
 

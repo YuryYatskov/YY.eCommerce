@@ -12,11 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
 	  <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.4" />
   </ItemGroup>
 
   <ItemGroup>
 	<ProjectReference Include="..\..\..\BuildingBlocks\Common.BuildApplication\Common.BuildApplication.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<Protobuf Include="..\..\Discount\Discount.Grpc\Protos\discount.proto" GrpcServices="Client">
+	  <Link>Protos\discount.proto</Link>
+	</Protobuf>
   </ItemGroup>
 
 </Project>
