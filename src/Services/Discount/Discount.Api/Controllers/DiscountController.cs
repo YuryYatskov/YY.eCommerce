@@ -38,7 +38,7 @@ namespace Discount.Api.Controllers
         [ProducesResponseType(typeof(Coupon), StatusCodes.Status200OK)]
         public async Task<ActionResult<Coupon>> GetDiscount([FromRoute, Required(AllowEmptyStrings = false)] string productName)
         {
-            _logger.LogInformation("Get a product discount by name {productName}.", productName);
+            _logger.LogInformation("{message}. ({productName})", $"Get a product discount by name {productName}.", productName);
             var coupon = await _discountRepository.GetDiscountAsync(productName);
             return Ok(coupon);
         }
@@ -56,21 +56,27 @@ namespace Discount.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Coupon>> CreateProduct([FromBody, Required] Coupon coupon)
         {
-            _logger.LogInformation("Create a discount for the product '{productName}'.", coupon.ProductName);
+            _logger.LogInformation("{message}. ({productName})", $"Create a discount for the product '{coupon.ProductName}'.", coupon.ProductName);
 
             var couponExist = await _discountRepository.GetDiscountAsync(coupon.ProductName);
             if (couponExist.Id != 0)
-                return BadRequest($"The discount for the product '{coupon.ProductName}' is already set.");
+                return BadRequest(new StatusCodeProblemDetails(StatusCodes.Status400BadRequest) {
+                    Detail = $"The discount for the product '{coupon.ProductName}' is already exists." });
 
             var result = await _discountRepository.CreateDiscountAsync(coupon);
             if (result)
             {
                 var couponAdded = await _discountRepository.GetDiscountAsync(coupon.ProductName);
+
+                _logger.LogInformation("The discount for the product '{coupon.ProductName}' with identifier '{coupon.Id}' has been added.", couponAdded.ProductName, couponAdded.Id);
+
                 return CreatedAtAction(nameof(GetDiscount),
                     new { productName = coupon.ProductName },
                     couponAdded);
             }
-            return BadRequest();
+
+            return BadRequest(new StatusCodeProblemDetails(StatusCodes.Status400BadRequest) {
+                Detail = $"Unable to create discount for product '{coupon.ProductName}'." });
         }
 
         /// <summary>
@@ -87,16 +93,16 @@ namespace Discount.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Coupon>> UpdateProduct([FromBody, Required] Coupon coupon)
         {
-            _logger.LogInformation("Change product discount by id {id}.", coupon.Id);
+            _logger.LogInformation("{message}. ({couponId})", $"Change product discount by id {coupon.Id}.", coupon.Id);
 
             var couponExist = await _discountRepository.GetDiscountAsync(coupon.Id);
             if (couponExist is null)
             {
-                const string message = "The product discount by id '{coupon.Id}' is not found.";
-                _logger.LogWarning(message, coupon.Id);
+                var messageNotFound = $"The product discount by id '{coupon.Id}' is not found.";
+                _logger.LogWarning("{message}. ({couponId})", messageNotFound, coupon.Id);
 
-                return NotFound(new StatusCodeProblemDetails(StatusCodes.Status404NotFound)
-                { Detail = message.Replace("{coupon.Id}", coupon.Id.ToString()) });
+                return NotFound(new StatusCodeProblemDetails(StatusCodes.Status404NotFound) {
+                    Detail = messageNotFound });
             }
 
             var result = await _discountRepository.UpdateDiscountAsync(coupon);
@@ -106,13 +112,11 @@ namespace Discount.Api.Controllers
                 return NoContent();
             }
 
-            const string messageNotChange = "It is impossible to change the discount for the '{coupon.ProductName}' product with identifier '{coupon.Id}'.";
-            _logger.LogInformation(messageNotChange, coupon.ProductName, coupon.Id);
+            var messageNotChange = $"It is impossible to change the discount for the '{coupon.ProductName}' product with identifier '{coupon.Id}'.";
+            _logger.LogInformation("{message}. ({productName}, {couponId})", messageNotChange, coupon.ProductName, coupon.Id);
 
-            return BadRequest(new StatusCodeProblemDetails(StatusCodes.Status400BadRequest)
-                    { Detail = messageNotChange
-                                .Replace("{coupon.ProductName}", coupon.ProductName)
-                                .Replace("{coupon.Id}", coupon.Id.ToString()) });
+            return BadRequest(new StatusCodeProblemDetails(StatusCodes.Status400BadRequest) {
+                Detail = messageNotChange });
         }
 
         /// <summary>
@@ -125,8 +129,13 @@ namespace Discount.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteDiscount([FromRoute, Required(AllowEmptyStrings = false)] string productName)
         {
-            _logger.LogInformation("Delete a product discount by name {productName}.", productName);
-            await _discountRepository.DeleteDiscountAsync(productName);
+            _logger.LogInformation("{message}. ({productName})", $"Delete a product discount by name {productName}.", productName);
+
+            var result = await _discountRepository.DeleteDiscountAsync(productName);
+            if (result)
+                _logger.LogInformation("{message}. ({productName})", $"The discount for the product '{productName}' has been deleted.", productName);
+            else
+                _logger.LogInformation("{message}. ({productName})", $"It is impossible to delete the discount for the '{productName}' product.", productName);
             return NoContent();
         }
     }
