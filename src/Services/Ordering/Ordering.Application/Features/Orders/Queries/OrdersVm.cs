@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Features.Orders.Queries.GetOrderList
+﻿namespace Ordering.Application.Features.Orders.Queries
 {
     public class OrdersVm
     {
