@@ -24,7 +24,25 @@ namespace Ordering.Infrastructure.Persistence
         {
             return new List<Order>
             {
-                new Order() {UserName = "Tor", FirstName = "Tor", LastName = "Fracosta", EmailAddress = "tor@example.com", AddressLine = "C. de Villarroel, 48", Country = "Barcelona", TotalPrice = 350 }
+                new Order() {
+                    UserName = "Tor",
+                    TotalPrice = 350,
+
+                    FirstName = "Tor",
+                    LastName = "Fracosta",
+                    EmailAddress = "tor@example.com",
+                    AddressLine = "C. de Villarroel, 48",
+                    Country = "Barcelona",
+                    State = "Catalonia",
+                    ZipCode = "08",
+
+                    CardName = "TOR",
+                    CardNumber = "1111 2222 3333 4444",
+                    Expiration = "05/2030",
+                    CVV = "123",
+                    PaymentMethod = 1
+
+                }
             };
         }
     }
