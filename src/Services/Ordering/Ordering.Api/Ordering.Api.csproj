@@ -4,6 +4,9 @@
 	<TargetFramework>net6.0</TargetFramework>
 	<Nullable>enable</Nullable>
 	<ImplicitUsings>enable</ImplicitUsings>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<DockerfileContext>..\..\..</DockerfileContext>
+	<DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\..\..\..\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
 	<ProjectReference Include="..\Ordering.Application\Ordering.Application.csproj" />
+	<ProjectReference Include="..\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

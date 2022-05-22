@@ -19,6 +19,10 @@ namespace Ordering.Application.Behaviours
             {
                 return await next();
             }
+            catch (KeyNotFoundException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 var requestName = typeof(TRequest).Name;
