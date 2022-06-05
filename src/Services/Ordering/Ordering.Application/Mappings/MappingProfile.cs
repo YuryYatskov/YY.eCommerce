@@ -10,7 +10,7 @@ namespace Ordering.Application.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Order, OrdersVm>();
+            CreateMap<Order, OrderVm>();
             CreateMap<CheckoutOrderCommand, Order>();
             CreateMap<UpdateOrderCommand, Order>();
         }

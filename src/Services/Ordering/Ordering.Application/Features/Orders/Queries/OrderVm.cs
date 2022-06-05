@@ -1,10 +1,15 @@
-﻿namespace EventBus.Messages.Events
+﻿namespace Ordering.Application.Features.Orders.Queries
 {
     /// <summary>
-    /// The basket checkout event.
+    /// An order view model.
     /// </summary>
-    public class BasketCheckoutEvent : IntegrationBaseEvent
+    public class OrderVm
     {
+        /// <summary>
+        /// An order identifier.
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// A user name.
         /// </summary>

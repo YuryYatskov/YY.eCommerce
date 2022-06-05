@@ -22,8 +22,8 @@ namespace Ordering.Api.Controllers
         }
 
         [HttpGet("{userName}")]
-        [ProducesResponseType(typeof(IEnumerable<OrdersVm>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrdersByUserName([FromRoute, Required(AllowEmptyStrings = false)] string userName)
+        [ProducesResponseType(typeof(IEnumerable<OrderVm>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<OrderVm>>> GetOrdersByUserName([FromRoute, Required(AllowEmptyStrings = false)] string userName)
         {
             var query = new GetOrdersListQuery(userName);
             var orders = await _mediator.Send(query);
@@ -31,8 +31,8 @@ namespace Ordering.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(IEnumerable<OrdersVm>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrderById([FromRoute, Required] int id)
+        [ProducesResponseType(typeof(IEnumerable<OrderVm>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<OrderVm>>> GetOrderById([FromRoute, Required] int id)
         {
             var query = new GetOrderQuery(id);
             var orders = await _mediator.Send(query);

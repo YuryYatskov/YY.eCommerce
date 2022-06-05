@@ -2,25 +2,83 @@
 
 namespace Ordering.Domain.Entities
 {
+    /// <summary>
+    /// The order entity.
+    /// </summary>
     public class Order : EntityBase
     {
-        public string UserName { get; set; }
+        /// <summary>
+        /// A user name.
+        /// </summary>
+        public string UserName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A total price.
+        /// </summary>
         public decimal TotalPrice { get; set; }
 
         // BillingAddress
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string EmailAddress { get; set; }
-        public string AddressLine { get; set; }
-        public string Country { get; set; }
-        public string State { get; set; }
-        public string ZipCode { get; set; }
+
+        /// <summary>
+        /// A first name.
+        /// </summary>
+        public string FirstName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A last name.
+        /// </summary>
+        public string LastName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// An email address.
+        /// </summary>
+        public string EmailAddress { get; set; } = string.Empty;
+
+        /// <summary>
+        /// An address.
+        /// </summary>
+        public string AddressLine { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A country.
+        /// </summary>
+        public string Country { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A state.
+        /// </summary>
+        public string State { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A zip code.
+        /// </summary>
+        public string ZipCode { get; set; } = string.Empty;
 
         // Payment
-        public string CardName { get; set; }
-        public string CardNumber { get; set; }
-        public string Expiration { get; set; }
-        public string CVV { get; set; }
+
+        /// <summary>
+        /// A card name.
+        /// </summary>
+        public string CardName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A card number.
+        /// </summary>
+        public string CardNumber { get; set; } = string.Empty;
+
+        /// <summary>
+        /// An expiration.
+        /// </summary>
+        public string Expiration { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A cw-code.
+        /// </summary>
+        public string CVV { get; set; } = string.Empty;
+
+        /// <summary>
+        /// A payment method.
+        /// </summary>
         public int PaymentMethod { get; set; }
     }
 }
