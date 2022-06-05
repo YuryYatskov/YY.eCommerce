@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Ordering.Api.Extensions
 {
@@ -27,6 +28,8 @@ namespace Ordering.Api.Extensions
             var services = scope.ServiceProvider;
 			var logger = services.GetRequiredService<ILogger<TContext>>();
 			var context = services.GetService<TContext>();
+
+            Guard.IsNotNull(context, nameof(context));
 
             try
             {

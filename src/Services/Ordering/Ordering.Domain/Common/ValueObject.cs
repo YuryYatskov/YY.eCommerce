@@ -1,5 +1,8 @@
 ﻿namespace Ordering.Domain.Common
 {
+    /// <summary>
+    /// The value object.
+    /// </summary>
     // Learn more: https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
     public abstract class ValueObject
     {
@@ -10,7 +13,7 @@
                 return false;
             }
 
-            return left?.Equals(right) != false;
+            return left?.Equals(right!) != false;
         }
 
         protected static bool NotEqualOperator(ValueObject left, ValueObject right)
@@ -20,6 +23,8 @@
 
         protected abstract IEnumerable<object> GetEqualityComponents();
 
+
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
@@ -31,6 +36,7 @@
             return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return GetEqualityComponents()
