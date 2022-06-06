@@ -22,7 +22,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         /// </summary>
         public decimal TotalPrice { get; set; }
 
-        // BillingAddress
+        #region BillingAddress
 
         /// <summary>
         /// A first name.
@@ -59,7 +59,9 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         /// </summary>
         public string ZipCode { get; set; } = string.Empty;
 
-        // Payment
+        #endregion
+
+        #region Payment
 
         /// <summary>
         /// A card name.
@@ -85,5 +87,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         /// A payment method.
         /// </summary>
         public int PaymentMethod { get; set; }
+
+        #endregion
     }
 }

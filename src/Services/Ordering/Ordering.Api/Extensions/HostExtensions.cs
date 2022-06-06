@@ -19,7 +19,7 @@ namespace Ordering.Api.Extensions
 		public static IHost MigrateDatabase<TContext>(
 			this IHost host,
 			Action<TContext, IServiceProvider> seeder,
-			int? retry = 0) 
+			int? retry = 0)
 				where TContext : DbContext
 		{
 			int retryForAvailability = retry!.Value;

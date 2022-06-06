@@ -36,7 +36,6 @@ namespace Ordering.Infrastructure.Persistence
                     Expiration = "05/2030",
                     CVV = "123",
                     PaymentMethod = 1
-
                 }
             };
         }

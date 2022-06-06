@@ -7,17 +7,30 @@ using SendGrid.Helpers.Mail;
 
 namespace Ordering.Infrastructure.Mail
 {
+    /// <summary>
+    /// The email service.
+    /// </summary>
     public class EmailService : IEmailService
     {
         private readonly EmailSettings _emailSettings;
         private readonly ILogger<EmailService> _logger;
 
+        /// <summary>
+        /// Initialization.
+        /// </summary>
+        /// <param name="mailSettings"> An email settings. </param>
+        /// <param name="logger"> Logging service. </param>
         public EmailService(IOptions<EmailSettings> mailSettings, ILogger<EmailService> logger)
         {
             _emailSettings = mailSettings.Value;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Send an email.
+        /// </summary>
+        /// <param name="email"> An email. </param>
+        /// <returns> The result of sending. </returns>
         public async Task<bool> SendEmail(Email email)
         {
             var client = new SendGridClient(_emailSettings.ApiKey);

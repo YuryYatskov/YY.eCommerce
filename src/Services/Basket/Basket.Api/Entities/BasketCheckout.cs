@@ -10,7 +10,7 @@
         /// </summary>
         public string UserName { get; set; } = string.Empty;
 
-        // BillingAddress
+        #region BillingAddress
 
         /// <summary>
         /// A first name.
@@ -47,7 +47,9 @@
         /// </summary>
         public string ZipCode { get; set; } = string.Empty;
 
-        // Payment
+        #endregion
+
+        #region Payment
 
         /// <summary>
         /// A card name.
@@ -73,5 +75,7 @@
         /// A payment method.
         /// </summary>
         public int PaymentMethod { get; set; }
+
+        #endregion
     }
 }

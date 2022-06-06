@@ -1,5 +1,6 @@
 using EventBus.Messages.Common;
 using MassTransit;
+using Microsoft.Toolkit.Diagnostics;
 using Ordering.Api.EventBusConsumer;
 using Ordering.Api.Extensions;
 using Ordering.Application;
@@ -49,6 +50,7 @@ app.MapControllers();
 
 app.MigrateDatabase<OrderContext>((context, service) => { 
     var logger = service.GetService<ILogger<OrderContextSeed>>();
+    Guard.IsNotNull(logger, nameof(logger));
     OrderContextSeed.SeedAsync(context, logger).Wait();
 });
 

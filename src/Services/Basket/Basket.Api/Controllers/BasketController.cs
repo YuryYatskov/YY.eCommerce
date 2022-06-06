@@ -90,11 +90,17 @@ namespace Basket.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Checkout an order for a basket.
+        /// </summary>
+        /// <param name="basketCheckout"> A basket. </param>
+        /// <response code="202"> An order request received. </response>
+        /// <response code="404"> The basket not found. </response>
         [Route("[action]")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        public async Task<IActionResult> Checkout([FromBody, Required] BasketCheckout basketCheckout)
         {
             // Get an existing basket with a total price.
             var basket = await _basketRepository.GetBasketAsync(basketCheckout.UserName);
