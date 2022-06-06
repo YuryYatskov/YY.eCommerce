@@ -3,6 +3,7 @@ using Basket.Api.Services;
 using Common.BuildApplication;
 using Discount.Grpc.Protos;
 using Hellang.Middleware.ProblemDetails;
+using MassTransit;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Serilog;
 
@@ -30,6 +31,12 @@ builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
     options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]));
 builder.Services.AddScoped<DiscountGrpcService>();
+
+builder.Services.AddMassTransit(config => config.UsingRabbitMq((_, cfg) =>
+    cfg.Host(builder.Configuration["EventBusSettings:HostAddress"])));
+builder.Services.AddMassTransitHostedService();
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
