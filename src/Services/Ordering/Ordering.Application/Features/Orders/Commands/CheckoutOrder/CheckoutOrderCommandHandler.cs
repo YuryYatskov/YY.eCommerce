@@ -8,6 +8,9 @@ using Ordering.Domain.Entities;
 
 namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 {
+    /// <summary>
+    /// The checkout order command handler.
+    /// </summary>
     public class CheckoutOrderCommandHandler : IRequestHandler<CheckoutOrderCommand, int>
     {
         private readonly IOrderRepository _orderRepository;
@@ -15,6 +18,13 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
         private readonly IEmailService _emailService;
         private readonly ILogger<CheckoutOrderCommandHandler> _logger;
 
+        /// <summary>
+        /// Initialization.
+        /// </summary>
+        /// <param name="orderRepository"><inheritdoc cref="IOrderRepository" path="/summary"/></param>
+        /// <param name="mapper"> Models matching. </param>
+        /// <param name="emailService"><inheritdoc cref="IEmailService" path="/summary"/></param>
+        /// <param name="logger"> A logger service. </param>
         public CheckoutOrderCommandHandler(
             IOrderRepository orderRepository,
             IMapper mapper,
@@ -27,11 +37,17 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        /// <summary>
+        /// The checkout order command handler.
+        /// </summary>
+        /// <param name="request"><inheritdoc cref="CheckoutOrderCommand" path="/summary"/></param>
+        /// <param name="cancellationToken"><inheritdoc cref="CancellationToken" path="/summary"/></param>
+        /// <returns> An identifier order. </returns>
         public async Task<int> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
         {
             var orderEntity = _mapper.Map<Order>(request);
             var orderAdded =  await _orderRepository.AddAsync(orderEntity);
-            
+
             _logger.LogInformation("{message} {orderId}", $"Order {@orderAdded.Id} is successfully created.", orderAdded.Id);
 
             await SendEmail(orderAdded);
@@ -39,9 +55,13 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
             return orderAdded.Id;
         }
 
+        /// <summary>
+        /// Send mail.
+        /// </summary>
+        /// <param name="order"> An order. </param>
         private async Task SendEmail(Order order)
         {
-            var email = new Email() { To = "custumer@example.com", Body = $"Order was created.", Subject = "Order was created" };
+            var email = new Email() { To = "custumer@example.com", Body = $"Order {order.Id} was created.", Subject = "Order was created" };
 
             try
             {

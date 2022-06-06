@@ -10,8 +10,16 @@ using Ordering.Infrastructure.Repositories;
 
 namespace Ordering.Infrastructure
 {
+    /// <summary>
+    /// The infrastructure service registration.
+    /// </summary>
     public static class InfrastructureServiceRegistration
     {
+        /// <summary>
+        /// The infrastructure service registration.
+        /// </summary>
+        /// <param name="services"> The services collection. </param>
+        /// <returns> The services collection. </returns>
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<OrderContext>(options =>
@@ -20,9 +28,8 @@ namespace Ordering.Infrastructure
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
             services.AddScoped<IOrderRepository, OrderRepository>();
 
-            services.Configure<EmailSettings>(c => configuration.GetSection("EmailSettings"));
+            services.Configure<EmailSettings>(_ => configuration.GetSection("EmailSettings"));
             services.AddTransient<IEmailService, EmailService>();
-
 
             return services;
         }

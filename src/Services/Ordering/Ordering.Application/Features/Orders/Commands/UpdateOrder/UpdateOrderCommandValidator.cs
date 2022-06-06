@@ -2,8 +2,14 @@
 
 namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
 {
+    /// <summary>
+    /// The change order command validator.
+    /// </summary>
     public class UpdateOrderCommandValidator : AbstractValidator<UpdateOrderCommand>
     {
+        /// <summary>
+        /// Initialization.
+        /// </summary>
         public UpdateOrderCommandValidator()
         {
             RuleFor(p => p.UserName)

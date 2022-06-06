@@ -1,7 +1,13 @@
 ﻿namespace EventBus.Messages.Common
 {
-    public class EventBusConstants
+    /// <summary>
+    /// The event bus constants.
+    /// </summary>
+    public static class EventBusConstants
     {
+        /// <summary>
+        /// The basket checkout quene.
+        /// </summary>
         public const string BasketCheckoutQuene = "basketcheckout-quene";
     }
 }

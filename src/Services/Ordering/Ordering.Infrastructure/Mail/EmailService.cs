@@ -7,9 +7,7 @@ using SendGrid.Helpers.Mail;
 
 namespace Ordering.Infrastructure.Mail
 {
-    /// <summary>
-    /// The email service.
-    /// </summary>
+    /// <inheritdoc cref="IEmailService"/>
     public class EmailService : IEmailService
     {
         private readonly EmailSettings _emailSettings;
@@ -26,11 +24,7 @@ namespace Ordering.Infrastructure.Mail
             _logger = logger;
         }
 
-        /// <summary>
-        /// Send an email.
-        /// </summary>
-        /// <param name="email"> An email. </param>
-        /// <returns> The result of sending. </returns>
+        /// <inheritdoc/>
         public async Task<bool> SendEmail(Email email)
         {
             var client = new SendGridClient(_emailSettings.ApiKey);

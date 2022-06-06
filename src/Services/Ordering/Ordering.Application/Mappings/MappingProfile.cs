@@ -8,6 +8,9 @@ namespace Ordering.Application.Mappings
 {
     public class MappingProfile : Profile
     {
+        /// <summary>
+        /// Initialization.
+        /// </summary>
         public MappingProfile()
         {
             CreateMap<Order, OrderVm>();

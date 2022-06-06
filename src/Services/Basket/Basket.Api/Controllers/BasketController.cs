@@ -27,8 +27,8 @@ namespace Basket.Api.Controllers
         /// </summary>
         /// <param name="basketRepository"> A basket repository. </param>
         /// <param name="discountGrpcService"> A discount service. </param>
-        /// <param name="mapper"> A mapper models. </param>
-        /// <param name="publishEndpoint"><inheritdoc cref="IPublishEndpoint" path="/summary"/></param>
+        /// <param name="mapper"> Models matching. </param>
+        /// <param name="publishEndpoint"> A publish endpoint to which the message is sent. <inheritdoc cref="IPublishEndpoint" path="/summary"/></param>
         public BasketController(
             IBasketRepository basketRepository,
             DiscountGrpcService discountGrpcService,
@@ -38,7 +38,7 @@ namespace Basket.Api.Controllers
             _basketRepository = basketRepository ?? throw new ArgumentNullException(nameof(basketRepository));
             _discountGrpcService = discountGrpcService ?? throw new ArgumentNullException(nameof(discountGrpcService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _publishEndpoint = publishEndpoint ?? throw new ArgumentException(nameof(publishEndpoint));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
         /// <summary>

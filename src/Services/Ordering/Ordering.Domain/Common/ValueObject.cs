@@ -13,16 +13,15 @@
                 return false;
             }
 
-            return left?.Equals(right!) != false;
+            return left?.Equals(right) != false;
         }
 
         protected static bool NotEqualOperator(ValueObject left, ValueObject right)
         {
-            return !(EqualOperator(left, right));
+            return !EqualOperator(left, right);
         }
 
         protected abstract IEnumerable<object> GetEqualityComponents();
-
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
@@ -40,7 +39,7 @@
         public override int GetHashCode()
         {
             return GetEqualityComponents()
-                .Select(x => x != null ? x.GetHashCode() : 0)
+                .Select(x => (x?.GetHashCode()) ?? 0)
                 .Aggregate((x, y) => x ^ y);
         }
     }

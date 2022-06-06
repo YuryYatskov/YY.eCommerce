@@ -2,8 +2,14 @@
 
 namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 {
+    /// <summary>
+    /// The checkout order command validator.
+    /// </summary>
     public class CheckoutOrderCommandValidator : AbstractValidator<CheckoutOrderCommand>
     {
+        /// <summary>
+        /// Initialization.
+        /// </summary>
         public CheckoutOrderCommandValidator()
         {
             RuleFor(p => p.UserName)

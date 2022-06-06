@@ -23,7 +23,6 @@ namespace Basket.Api.Services
         /// </summary>
         /// <param name="productName"> A product name.</param>
         /// <returns> A product discount. </returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("AsyncUsage", "AsyncFixer01:Unnecessary async/await usage", Justification = "<Waiting>")]
         public async Task<CouponModel> GetDiscount(string productName)
         {
             var discountRequest = new GetDiscountRequest { ProductName = productName };

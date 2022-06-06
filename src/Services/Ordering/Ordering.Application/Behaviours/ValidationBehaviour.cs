@@ -3,16 +3,31 @@ using MediatR;
 
 namespace Ordering.Application.Behaviours
 {
+    /// <summary>
+    /// The validation behaviour.
+    /// </summary>
+    /// <typeparam name="TRequest"> A request type. </typeparam>
+    /// <typeparam name="TResponse"> A response type. </typeparam>
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
+        /// <summary>
+        /// Initialization.
+        /// </summary>
+        /// <param name="validators"> Collection validators. </param>
         public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
         {
             _validators = validators;
         }
 
+        /// <summary>
+        /// The validation handler.
+        /// </summary>
+        /// <param name="request"> A request. </param>
+        /// <param name="cancellationToken"> Propagates notification that operations should be canceled. </param>
+        /// <param name="next"> A next handler request. </param>
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             if (_validators.Any())
