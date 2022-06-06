@@ -3,7 +3,6 @@ using MongoDB.Driver;
 
 namespace Catalog.Api.Data
 {
-
     /// <inheritdoc cref="ICatalogContext"/>
     public class CatalogContext : ICatalogContext
     {

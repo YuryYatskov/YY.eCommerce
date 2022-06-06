@@ -20,7 +20,7 @@ namespace Discount.Grpc.Services
         /// </summary>
         /// <param name="discountRepository"> A discount repository. </param>
         /// <param name="logger"> Logging service. </param>
-        /// <param name="mapper"> The models mapper. </param>
+        /// <param name="mapper"> Models matching. </param>
         /// <exception cref="ArgumentNullException"></exception>
         public DiscountService(IDiscountRepository discountRepository, ILogger<DiscountService> logger, IMapper mapper)
         {

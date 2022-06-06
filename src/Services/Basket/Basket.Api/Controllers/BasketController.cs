@@ -1,6 +1,9 @@
-﻿using Basket.Api.Entities;
+﻿using AutoMapper;
+using Basket.Api.Entities;
 using Basket.Api.Repositories;
 using Basket.Api.Services;
+using EventBus.Messages.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
@@ -16,16 +19,26 @@ namespace Basket.Api.Controllers
     {
         private readonly IBasketRepository _basketRepository;
         private readonly DiscountGrpcService _discountGrpcService;
+        private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
 
         /// <summary>
         /// Initialization.
         /// </summary>
         /// <param name="basketRepository"> A basket repository. </param>
         /// <param name="discountGrpcService"> A discount service. </param>
-        public BasketController(IBasketRepository basketRepository, DiscountGrpcService discountGrpcService)
+        /// <param name="mapper"> Models matching. </param>
+        /// <param name="publishEndpoint"> A publish endpoint to which the message is sent. <inheritdoc cref="IPublishEndpoint" path="/summary"/></param>
+        public BasketController(
+            IBasketRepository basketRepository,
+            DiscountGrpcService discountGrpcService,
+            IMapper mapper,
+            IPublishEndpoint publishEndpoint)
         {
             _basketRepository = basketRepository ?? throw new ArgumentNullException(nameof(basketRepository));
             _discountGrpcService = discountGrpcService ?? throw new ArgumentNullException(nameof(discountGrpcService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
         /// <summary>
@@ -75,6 +88,34 @@ namespace Basket.Api.Controllers
         {
             await _basketRepository.DeleteBasketAsync(userName);
             return NoContent();
+        }
+
+        /// <summary>
+        /// Checkout an order for a basket.
+        /// </summary>
+        /// <param name="basketCheckout"> A basket. </param>
+        /// <response code="202"> An order request received. </response>
+        /// <response code="404"> The basket not found. </response>
+        [Route("[action]")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Checkout([FromBody, Required] BasketCheckout basketCheckout)
+        {
+            // Get an existing basket with a total price.
+            var basket = await _basketRepository.GetBasketAsync(basketCheckout.UserName);
+            if(basket == null)
+                return NotFound($"No basket found for user named {basketCheckout.UserName}.");
+
+            // Send a checkout event to rabbitmq.
+            var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
+            eventMessage.TotalPrice = basket.TotalPrice;
+            await _publishEndpoint.Publish(eventMessage);
+
+            // Remove the basket.
+            await _basketRepository.DeleteBasketAsync(basketCheckout.UserName);
+
+            return Accepted();
         }
     }
 }
