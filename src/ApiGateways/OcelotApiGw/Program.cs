@@ -3,6 +3,10 @@ using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureAppConfiguration((hostingContext, config) => {
+    config.AddJsonFile($"ocelot.{hostingContext.HostingEnvironment}.json", true, true);
+});
+
 builder.Host.ConfigureLogging((hostingContext, loggingBuilder) =>
     {
         loggingBuilder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
