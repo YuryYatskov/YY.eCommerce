@@ -1,4 +1,7 @@
-﻿namespace Shopping.Aggregator.Extensions
+﻿using System.Net;
+using System.Text.Json;
+
+namespace Shopping.Aggregator.Extensions
 {
     /// <summary>
     /// A http client extensions.
@@ -15,9 +18,16 @@
         {
             if (response.IsSuccessStatusCode)
                 return await response.Content.ReadFromJsonAsync<T>();
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+                return Activator.CreateInstance<T>();
 
             var content = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException($"Something went wrong calling the API. {response.ReasonPhrase}. {content.Replace("\"", "").TrimEnd()}", null, response.StatusCode);
+            var message = JsonSerializer.Serialize(new {
+                message = $"Something went wrong calling the API {response.RequestMessage?.RequestUri?.AbsolutePath}.",
+                reasonPhrase = response.ReasonPhrase,
+                responseApi = JsonSerializer.Deserialize<object>(content)
+            });
+            throw new HttpRequestException(message, null, response.StatusCode);
         }
     }
 }
