@@ -79,7 +79,7 @@ namespace Catalog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductByName([FromRoute, Required(AllowEmptyStrings = false)] string name)
         {
-            _logger.LogInformation("Get products by category {category}.", name);
+            _logger.LogInformation("Get products by name {name}.", name);
             var products = await _repository.GetProductByNameAsync(name);
             return Ok(products);
         }
